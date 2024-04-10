@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ event.name }}{% endblock %}
+
+{% block body %}
+    <h1>{{ event.name }}</h1>
+
+    <div>
+        <strong>Date:</strong> {{ event.description }}
+    </div>
+    <div>
+        <strong>Date:</strong> {{ event.location }}
+    </div>
+
+    <div>
+        <strong>Date:</strong> {{ event.slots }}
+    </div>
+
+
+    <div>
+        <strong>Date:</strong> {{ event.endDate|date('F j, Y, g:i a') }}
+    </div>
+
+    
+    
+    {% if is_granted('ROLE_ADMIN') %}
+        <div>
+        <!-- Event details... -->
+
+    <h2>Subscribed Users:</h2>
+    <ul>
+        {% for user in users %}
+                <li>{{ user.name }} (<a href="{{ path('user_event_unsubscribe', {'event' : event.id, 'user' : user.id}) }}">Unsubscribe</a>)</li>
+            {% else %}
+                <li>No users have subscribed to this event.</li>
+            {% endfor %}
+        </ul>
+        </div>
+    {% endif %}
+
+    <a href="{{ path('app_event') }}">Back to list</a>
+{% endblock %}
