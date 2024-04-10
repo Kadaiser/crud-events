@@ -11,6 +11,18 @@
 <div class="example-wrapper">
     <h1>Events</h1>
 
+    {% for message in app.flashes('error') %}
+        <div class="flash-error">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('success') %}
+        <div class="flash-error">
+            {{ message }}
+        </div>
+    {% endfor %}
+
     {% if is_granted('ROLE_ADMIN') %}
       <a href="{{ path('admin_event_create') }}" class="btn btn-primary">Create new event</a>
     {% endif %}
