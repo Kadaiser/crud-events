@@ -34,6 +34,8 @@ DATABASE_URL=mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db:3306/${MYSQL_DATABASE}
 
 9. Inside the `php` container, execute migrations php bin/console make:migration
 
+10. load seeder with `php bin/console doctrine:fixtures:load`
+
 You could change the name, user and password of the database in the `env` file at the root of the project.
 
 
