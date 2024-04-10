@@ -24,7 +24,7 @@ class EventController extends AbstractController
     private $doctrine;
 
     //constant of threshold percentage
-    public const MAX_THRESOLD_PERCENT = 80;
+    public const MIN_THRESOLD_PERCENT = 0.1;
 
     public function __construct(ManagerRegistry $doctrine)
     {
@@ -40,23 +40,7 @@ class EventController extends AbstractController
     public function index(Request $request, EventRepository $eventRepository): Response
     {
         //$events = $this->doctrine->getRepository(Event::class)->findAll();
-        /*
-        $form = $this->createForm(EventType::class);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $filterData = $form->getData();
-
-            $events = $this->doctrine
-                ->getRepository(Event::class)
-                ->filterBy($filterData);
-        } else {
-            $events = $this->doctrine
-                ->getRepository(Event::class)
-                ->findAll();
-        }
-        */
         $name = $request->query->get('name');
-
         if ($name) {
             $events = $eventRepository->findByName($name);
         } else {
@@ -107,20 +91,30 @@ class EventController extends AbstractController
         $now = new \DateTime();
         if ($event->getEndDate() < $now) {
             $this->addFlash('error', 'This event is off date.');
-        }
-
-        if ($event->getUsers()->contains($user)) {
+        } elseif ($event->getUsers()->contains($user)) {
             $this->addFlash('error', 'You are already suscribe for this event.');
         } elseif ($event->getSlots() <= count($event->getUsers())) {
             $this->addFlash('error', 'This event is full.');
         } else {
-            //check the capacity of the event, threshold is 80%
-            $this->checkCapacity($event, self::MAX_THRESOLD_PERCENT);
 
             $event->addUser($user);
             $entityManager = $this->doctrine->getManager();
             $entityManager->persist($event);
             $entityManager->flush();
+
+            //check the capacity of the event
+            if($this->checkThreshold($event)){
+                /*
+                $mailer = new MailerInterface();
+                $email = (new Email())
+                    ->from('system@mail.com')
+                    ->to('admin@mail.com')
+                    ->subject('Event Capacity Threshold Met')
+                    ->text('The event '.$event->getName().' has reached the capacity threshold.');
+                $mailer->send($email);
+                */
+                $this->addFlash('error', 'LESS THAN 10% OF SPOTS FOR EVENT: ('.$event->getName().') REMAINING');
+            }
 
             $this->addFlash('success', 'You have successfully suscribe for the event.');
         }
@@ -156,20 +150,24 @@ class EventController extends AbstractController
 
 
     /**
-     * Calculate the capacity percentage of the event after a user registers. 
-     * If the capacity is at $percent or more, send a notification
+     *  The application must notify when the minimum capacity threshold is 
+     *  met, which by default will be when there is 10% of the spots left
      */
     #[Route('/event/register/{id}', name: 'app_event_register')]
-    public function checkCapacity(Event $event, int $percent): Bool
+    public function checkThreshold(Event $event): Bool
     {
-        $capacity = $event->getSlots();
-        $users = count($event->getUsers());
-        $percentage = ($users / $capacity) * 100;
-
-        if ($percentage >= $percent) {
-            //$this->sendNotification($event);
+        $totalSpots = $event->getSlots();
+        $registeredUsers = count($event->getUsers());
+        $remainingSpots = $totalSpots - $registeredUsers;
+    
+        // Calculate the threshold (10% of total spots)
+        $threshold = $totalSpots * self::MIN_THRESOLD_PERCENT;
+    
+        // Check if the remaining spots are less than or equal to the threshold
+        if ($remainingSpots <= $threshold) {
             return true;
         }
+    
         return false;
     }
 
