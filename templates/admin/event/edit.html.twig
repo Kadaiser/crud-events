@@ -5,11 +5,11 @@
 {% block body %}
     <h1>Edit Event</h1>
 
-    {{ form_start(eventForm) }}
-        {{ form_widget(eventForm) }}
+    {{ form_start(eventEditform) }}
+        {{ form_widget(eventEditform) }}
 
         <button type="submit">Save</button>
-    {{ form_end(eventForm) }}
+    {{ form_end(eventEditform) }}
 
     <a href="{{ path('app_event') }}">back to list</a>
 {% endblock %}
