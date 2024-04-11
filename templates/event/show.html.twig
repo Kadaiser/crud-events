@@ -3,40 +3,39 @@
 {% block title %}{{ event.name }}{% endblock %}
 
 {% block body %}
-    <h1>{{ event.name }}</h1>
+<div class="flex justify-center items-center h-screen bg-gray-200">
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
+        <h1 class="mb-6 text-2xl font-bold text-gray-700 text-center">{{ event.name }}</h1>
 
-    <div>
-        <strong>Date:</strong> {{ event.description }}
-    </div>
-    <div>
-        <strong>Date:</strong> {{ event.location }}
-    </div>
-
-    <div>
-        <strong>Date:</strong> {{ event.slots }}
-    </div>
-
-
-    <div>
-        <strong>Date:</strong> {{ event.endDate|date('F j, Y, g:i a') }}
-    </div>
-
-    
-    
-    {% if is_granted('ROLE_ADMIN') %}
-        <div>
-        <!-- Event details... -->
-
-    <h2>Subscribed Users:</h2>
-    <ul>
-        {% for user in users %}
-                <li>{{ user.name }} (<a href="{{ path('user_event_unsubscribe', {'event' : event.id, 'user' : user.id}) }}">Unsubscribe</a>)</li>
-            {% else %}
-                <li>No users have subscribed to this event.</li>
-            {% endfor %}
-        </ul>
+        <div class="mb-4">
+            <strong class="text-gray-700">Description:</strong> 
+            <p class="text-gray-600">{{ event.description }}</p>
         </div>
-    {% endif %}
+        <div class="mb-4">
+            <strong class="text-gray-700">Location:</strong> 
+            <p class="text-gray-600">{{ event.location }}</p>
+        </div>
+        <div class="mb-4">
+            <strong class="text-gray-700">Slots:</strong> 
+            <p class="text-gray-600">{{ event.slots }}</p>
+        </div>
+        <div class="mb-4">
+            <strong class="text-gray-700">End Date:</strong> 
+            <p class="text-gray-600">{{ event.endDate|date('F j, Y, g:i a') }}</p>
+        </div>
 
-    <a href="{{ path('app_event') }}">Back to list</a>
+        {% if is_granted('ROLE_ADMIN') %}
+            <h2 class="mb-4 text-lg font-bold text-gray-700">Subscribed Users:</h2>
+            <ul class="list-disc pl-5 mb-4">
+                {% for user in users %}
+                    <li class="text-gray-600">{{ user.name }} (<a href="{{ path('user_event_unsubscribe', {'event' : event.id, 'user' : user.id}) }}" class="text-blue-500 hover:text-blue-800">Unsubscribe</a>)</li>
+                {% else %}
+                    <li class="text-gray-600">No users have subscribed to this event.</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <a href="{{ path('app_event') }}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">Back to list</a>
+    </div>
+</div>
 {% endblock %}

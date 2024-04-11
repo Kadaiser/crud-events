@@ -36,6 +36,18 @@ DATABASE_URL=mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db:3306/${MYSQL_DATABASE}
 
 10. load seeder with `php bin/console doctrine:fixtures:load`
 
+11. Can log as admin with the next credentials:
+```
+user: test@mail.com
+pass: admin
+```
+And there are seeded some more users with like this
+```
+user: test1@mail.com | test2@mail.com | ... | test9@mail.com
+pass: 12345678
+```
+
+
 You could change the name, user and password of the database in the `env` file at the root of the project.
 
 
