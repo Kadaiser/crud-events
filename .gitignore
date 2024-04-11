@@ -10,3 +10,4 @@
 ###< symfony/framework-bundle ###
 /.docker/.env.nginx.local
 development.md
+.devcontainer/

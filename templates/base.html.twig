@@ -2,7 +2,10 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>Event Manager</title>
+        <head>
+            <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+        </head>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
@@ -13,23 +16,19 @@
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
-    <body>
-
-            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-            <nav>
-                <ul>
-                
-                    {% if is_granted('ROLE_ADMIN') %}
-                      <li><a href="{{ path('admin') }}">Dashboard</a></li>
-                    {% endif %}
-
-
-                    <li><a href="{{ path('app_event') }}">Events</a></li>
-                    <li><a href="{{ path('app_logout') }}">Close session</a></li>
-                    <!-- Add more admin links as needed -->
-                </ul>
-            </nav>
-            {% endif %}
+    <body class="bg-gradient-to-r from-green-400 to-blue-500 text-gray-800">
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <nav class="p-6 bg-white shadow-md mb-8">
+            <ul class="flex space-x-4">
+                {% if is_granted('ROLE_ADMIN') %}
+                <li><a href="{{ path('admin') }}" class="text-blue-500 hover:text-blue-700">Dashboard</a></li>
+                {% endif %}
+                <li><a href="{{ path('app_event') }}" class="text-blue-500 hover:text-blue-700">Events</a></li>
+                <li><a href="{{ path('app_logout') }}" class="text-blue-500 hover:text-blue-700">Close session</a></li>
+                <!-- Add more admin links as needed -->
+            </ul>
+        </nav>
+        {% endif %}
 
         {% block body %}{% endblock %}
     </body>

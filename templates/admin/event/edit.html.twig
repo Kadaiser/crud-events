@@ -3,13 +3,21 @@
 {% block title %}Edit Event{% endblock %}
 
 {% block body %}
-    <h1>Edit Event</h1>
+<div class="flex justify-center items-center h-screen bg-gray-200">
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
+        <h1 class="mb-6 text-2xl font-bold text-gray-700 text-center">Edit Event</h1>
 
-    {{ form_start(eventEditform) }}
-        {{ form_widget(eventEditform) }}
+        {{ form_start(eventEditform, {'attr': {'class': 'space-y-4'}}) }}
+            {% for field in eventEditform %}
+                <div class="mb-4">
+                    {{ form_row(field, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}}) }}
+                </div>
+            {% endfor %}
 
-        <button type="submit">Save</button>
-    {{ form_end(eventEditform) }}
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">Save</button>
+        {{ form_end(eventEditform) }}
 
-    <a href="{{ path('app_event') }}">back to list</a>
+        <a href="{{ path('app_event') }}" class="mt-4 inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">Back to list</a>
+    </div>
+</div>
 {% endblock %}
